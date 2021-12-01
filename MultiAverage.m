@@ -1,119 +1,154 @@
-<<<<<<< HEAD
 [file,path] = uigetfile('*.dat','Select one or more input files','MultiSelect','on');
 
 %Format to keep all decimal places
 format short
-        
-% Global properties used in and out of for loop
-sum = 0;
-sum2y = 0;
-sum2z = 0;
-min = 100000;
+
+% Set large possible index of end of file
+min = 1000000;
+sz = size(file,2);
 
 if isa(file,"cell")
-    for i = 1:1:size(file, 2)
+    for i = 1:1:sz
         % Open file and read all lines to create string w/ same format
         default = readlines([path, file{1,i}]);
-        
+
+        % Extract scattering angle for display
+        AngleTxt = regexp(default,'Scattering angle:	');     % Get cell array to see where Scattering angle is.
+        AngleInd = cellfun(@isempty,AngleTxt)==0;               % Make logical array to extract line index.
+        Angle = str2double(extractAfter(default(AngleInd),'Scattering angle:	'));
+        app.ScatteringangleEditField.Value = Angle;             % Display angle.
+
         % Split at the line-breaks to find separated data blocks
         % Create new cell matrix of strings, broken at each blank line
         new = regexp(default,'\s\n\s','split');
-        
+
         % Find which lines are empty to get indices between blocks per file
         logic = cellfun(@isempty,default);
         indices = find(logic);
-        
-        % Store smallest index of last line to properly average channels block
+
+        % Store smallest index of last line to administer cutoff and properly average the channels block
         if indices(3) < min
             min = indices(3);
         end
         
-        %%g2-1 data column
-        yvalues{1,i} = new(indices(1)+2:indices(2)-1,1);
+        % Separate each block into its own cell array
+        data{1,i} = new(indices(1)+2:indices(2)-1,1);   % g2-1 data column
+        data{2,i} = new(indices(2)+2:indices(3)-1,1);   % Channel columns
 
-        % Separate all elements of both columns into the double values to average later
-        % Start with first data block g2-1
-        g2 = cellfun(@split, yvalues{1,i}, 'UniformOutput', false);
+
+        %%Separate every element of each column into doubles to average later
+        %%Keep first column of both blocks untouched
         
-        for indx = 1:1:size(g2)
-            x(indx,1) = g2{indx,1}(1);
-            y(indx,1) = str2double(g2{indx,1}(2));
+        % Have both split blocks in new cell arrays containing
+        % the split cell arrays
+        for q = 1:2
+            splitCells{1,q} = cellfun(@split, data{q,i}, 'UniformOutput', false);
+        end
+
+        % Turn into doubles respective to each block's size
+        for indx = 1:1:size(splitCells{1,1})
+            lagTime(indx,1) = splitCells{1,1}{indx,1}(1);
+            g2(indx,1) = str2double(splitCells{1,1}{indx,1}(2));
         end
         
-        % Select the values we are averaging
-        yvalues{1,i} = y(:);
-        xvalues = x(:);
-
-        %Calculate SUM of our g2-1 column
-        sum = sum + yvalues{1,i};
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
-        %%%Channel columns
-        channels{1,i} = new(indices(2)+2:indices(3)-1,1);
-
-        %Separate the two columns into the double values to average later
-        CR = cellfun(@split, channels{1,i}, 'UniformOutput', false);
-        
-        for indx = 1:1:size(CR)
-            x2(indx,1) = CR{indx,1}(1);
-            y2(indx,1) = str2double(CR{indx,1}(2));
-            z2(indx,1) = str2double(CR{indx,1}(3));
+        for indx = 1:1:size(splitCells{1,2})
+            countRate(indx,1) = splitCells{1,2}{indx,1}(1);
+            y2(indx,1) = str2double(splitCells{1,2}{indx,1}(2));
+            z2(indx,1) = str2double(splitCells{1,2}{indx,1}(3));
         end
-        
-        % Select the values we are averaging
-        countRate = x2(:);
-        channels{1,i} = y2(:);
-        channels{2,i} = z2(:);
-       
 
-        %Calculate SUM of both channels
-        %%MAYBE LOOP THIS AND HAVE ALL AVERAGES IN ONE VARIABLE
-        sum2y = sum2y + channels{1,i};
-        sum2z = sum2z + channels{2,i};
+        % Select the values we are averaging for 1st block
+        lag = lagTime(:);
+        data{1,i} = g2(:);
         
+        % Select the values we are averaging for 2nd block
+        count = countRate(:);
+        data{2,i} = y2(:);
+        data{3,i} = z2(:);
         
+        % Correlation plot
+        xvaluesPlot = str2double(lagTime);
+        plot(app.Corr,xvaluesPlot,data{1,i});
+        
+        % Separate channel plots
+        x2plot = str2double(countRate);
+        plot(app.CHA,x2plot,y2);
+        plot(app.CHB,x2plot,z2);
+
+        % Pop up dialogue box
+        selection = uiconfirm(app.UIFigure,'Do you want to add this trace to the final average?',...
+            'Add to average?','Options',{'Yes','No'}); 
+        selection_str = convertCharsToStrings(selection);
+        
+        if selection_str == 'Yes'
+
+            % Create new cell array to hold the sums of each
+            % column. Set with zeros in order to add
+            sum = cell(3,1);
+            sum(:,1) = {0};
+
+            for rows = 1:3
+                sum{rows,1} = sum{rows,1} + data{rows,i};
+            end
+
+        else
+            sz = sz - 1;
+        end
+%                     
+%                     d = dialog('Position',[101 22 449 221],'Name','Add to Average?');
+% 
+%                     uicontrol('Parent',d,...
+%                                'Style','text',...
+%                                'Position',[20 80 210 40],...
+%                                'String','Do you want to add this trace to the final average?',...
+%                                'FontSize', 22); %Text asking question
+%                 
+%                     yes = uicontrol('Parent',d,...
+%                                'Position',[45 20 70 25],...
+%                                'String','Yes',...
+%                                'Callback',@yesCallback); % Yes button
+% 
+%                     uicontrol('Parent',d,...
+%                                'Position',[105 20 70 25],...
+%                                'String','No',...
+%                                'Callback','delete(gcf)'); % No button
+% 
+%                     uiwait(d);
+
+    end %End loop cycling through files
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Now that we've looked at every file, calculate average of
+    % each column. Create new cell array to hold avgs. Set w/ 0
+    avgY = cell(3,1);
+    avgY(:,1) = {0};
+
+    for rows = 1:3
+        avgY{rows,1} = sum{rows,1}./sz;
+        avgY{rows,1} = num2str(avgY{rows,1}, '%.6f');
+        avgY{rows,1} = string(avgY{rows,1});
+        avgY{rows,1} = strtrim(avgY{rows,1});
     end
 
-    %Calculate AVG
-    %%SAME THOUGHT AS ABOVE
-    avgY = sum/size(file,2);
-    avg2Y = sum2y/size(file,2);
-    avg2Z = sum2z/size(file,2);
+    % Format each block uniquely back into strings
     
-    %Turn into proper string format for given DAT file
-    avgY = num2str(avgY, '%.6f');
-    avgY = string(avgY);
-    avgY = strtrim(avgY);
-    
-    avg2Y = num2str(avg2Y, '%.6f');
-    avg2Y = string(avg2Y);
-    avg2Y = strtrim(avg2Y);
-    
-    avg2Z = num2str(avg2Z, '%.6f');
-    avg2Z = string(avg2Z);
-    avg2Z = strtrim(avg2Z);
+    for i=1:size(avgY{1,1},1)
+        import(i,:) = compose('%s\t%s',lag(i,:), avgY{1,1}(i,:));
+    end
 
-    %Use for loop with SIZE of cell array, format strings while exporting
-    %cell arrays of each data block
-    
-    for i=1:size(avgY,1)
-        import(i,:) = compose('%s\t%s',xvalues(i,:), avgY(i,:));
+    for i=1:size(avgY{2,1},1)
+        import2(i,:) = compose('%s\t%s\t%s',count(i,:),avgY{2,1}(i,:),avgY{3,1}(i,:));
     end
-    
-    for i=1:size(avg2Y,1)
-        import2(i,:) = compose('%s\t%s\t%s',countRate(i),avg2Y(i,:),avg2Z(i,:));
-    end
-    
-    %Cap the end of the new data file to min of last index
+
+    % Cap the end of the new data file to the minimum of the final index
     cap = min-indices(2)-1;
-    import2(cap:end,:) = [];
-    
+    import2(cap:end,:) = []; %Erase previous entries off of first read
+
     % Rewrite these specific blocks with new averaged data
     new(indices(1)+2:indices(2)-1) = import;
     new(indices(2)+2:min-1,1) = import2;
 
-    new(min:end,:) = [];
+    new(end,:) = [];
     %Write this matrix to new .dat file
     writecell(new,join([path,"averaged","_",file(end)]));
 
@@ -121,66 +156,3 @@ else
     %Not for averaging. If user selects only one file, correct them
     f = msgbox("Please select more than one file");
 end
-
-=======
-[file,path] = uigetfile('*.dat','Select one or more input files','MultiSelect','on');
-sum = 0;
-
-if isa(file,"cell")
-
-    for i = 1:1:size(file, 2)
-        %Open file and read all lines to create string w/ same format
-        default = readlines([path, file{1,i}]);
-        
-        %Split at the line breaks to find separated data blocks
-        new = regexp(default,'\s\n\s','split');
-        
-        %Find which lines are empty to get indices of yvalues
-        logic = cellfun(@isempty,default);
-        indices = find(logic);
-        yvalues{1,i} = new(indices(1)+2:indices(2)-1,1);
-
-        %Separate the two columns into the double values to average later
-        newStr = cellfun(@split, yvalues{1,i}, 'UniformOutput', false);
-
-        for indx = 1:1:size(newStr)
-            x(indx,1) = str2double(newStr{indx,1}(1));
-            y(indx,1) = str2double(newStr{indx,1}(2));
-        end
-        
-        % Select the values we are averaging
-        yvalues{1,i} = y(:);
-        xvalues = x(:);
-
-        %Calculate SUM
-        sum = sum + yvalues{1,i};
-        
-    end
-
-    %Calculate AVG
-    avgY = sum/size(file,2);
-    avgY = string(avgY);
-    
-    %Turn into proper string format then convert into cell
-    xvalues = string(xvalues);
-    import = strcat(xvalues,'     ',avgY);
-    %Use for loop with numel() of cell array and then sprintf every single
-    %val
-    for i=1:numel(avgY)
-        import(i) = sprintf('%s \t %s',xvalues(i), avgY(i));
-    end
-    cellery = cellstr(import);
-    
-    %Create new matrix to fit averaged data with x data
-    new(indices(1)+2:indices(2)-1) = cellery;
-
-
-    %Write this matrix to new .dat file
-    writecell(new,join([path,"averaged","_",file(end)]));
-
-else
-    %Not for averaging. If user selects only one file, correct them
-    f = msgbox("Please select more than one file");
-end
-
->>>>>>> 0c0d847b753063efffeeb117fb3162b0c8fb4563
