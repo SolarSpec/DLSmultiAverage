@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="4177537919" file="C:\Users\hvidi\Desktop\Haris\DLSaveraging.prj" location="C:\Users\hvidi\Desktop\Haris" name="DLSaveraging" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3247770630" file="C:\Users\hvidi\Desktop\DLSmultiAverage\DLSaveraging.prj" location="C:\Users\hvidi\Desktop\DLSmultiAverage" name="DLSaveraging" target="target.mlapps" target-name="Package App">
     <param.appname>DLSaveraging</param.appname>
     <param.authnamewatermark>Robert Godin, Haris Vidimlic</param.authnamewatermark>
     <param.email />
@@ -8,7 +8,7 @@
     <param.icons />
     <param.summary>GUI to help average multiple DLS files</param.summary>
     <param.description />
-    <param.screenshot>C:\Users\hvidi\AppData\Local\Temp\tpdae4945c_59c2_40c3_9bc0_07d82efd823d.png</param.screenshot>
+    <param.screenshot>C:\Users\hvidi\AppData\Local\Temp\tpf1485bb6_3ff7_41c1_9e8a_a91d24986483.png</param.screenshot>
     <param.version>1.0</param.version>
     <param.products.name />
     <param.products.id />
@@ -35,7 +35,7 @@
     <fileset.resources />
     <fileset.package />
     <build-deliverables>
-      <file location="C:\Users\hvidi\Desktop" name="Haris" optional="false">C:\Users\hvidi\Desktop\Haris</file>
+      <file location="C:\Users\hvidi\Desktop" name="DLSmultiAverage" optional="false">C:\Users\hvidi\Desktop\DLSmultiAverage</file>
     </build-deliverables>
     <workflow />
     <matlab>
