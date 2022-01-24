@@ -114,7 +114,7 @@ Make sure MATLAB is installed. It is available for download in the Software Dist
 
 This app is currently lacking in any examples to be shown as it is still being created
 
-_For more information on data filtering and decimation, please refer to the [Documentation](https://www.mathworks.com/help/signal/ref/decimate.html#d123e21788)_
+_For more information on any of the internal functions, please refer to the [MATLAB Documentation](https://www.mathworks.com/help/matlab/)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
