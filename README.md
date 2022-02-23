@@ -157,7 +157,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the BSD 3-Clause License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -196,7 +196,7 @@ Project Link: [https://github.com/SolarSpec/DLSmultiAverage](https://github.com/
 [issues-shield]: https://img.shields.io/github/issues/SolarSpec/DLSmultiAverage.svg?style=for-the-badge
 [issues-url]: https://github.com/SolarSpec/DLSmultiAverage/issues
 [license-shield]: https://img.shields.io/github/license/SolarSpec/DLSmultiAverage.svg?style=for-the-badge
-[license-url]: https://github.com/SolarSpec/DLSmultiAverage/blob/master/LICENSE.txt
+[license-url]: https://github.com/SolarSpec/DLSmultiAverage/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/haris-vidimlic-06730019b/
 [product-screenshot]: images/Screenshot.png
