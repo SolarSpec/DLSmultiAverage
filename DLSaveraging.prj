@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3247770630" file="C:\Users\hvidi\Desktop\DLSmultiAverage\DLSaveraging.prj" location="C:\Users\hvidi\Desktop\DLSmultiAverage" name="DLSaveraging" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1511448962" file="C:\Users\hvidi\Desktop\DLSmultiAverage\DLSaveraging.prj" location="C:\Users\hvidi\Desktop\DLSmultiAverage" name="DLSaveraging" target="target.mlapps" target-name="Package App">
     <param.appname>DLSaveraging</param.appname>
     <param.authnamewatermark>Robert Godin, Haris Vidimlic</param.authnamewatermark>
     <param.email />
@@ -8,11 +8,17 @@
     <param.icons />
     <param.summary>GUI to help average multiple DLS files</param.summary>
     <param.description />
-    <param.screenshot>C:\Users\hvidi\AppData\Local\Temp\tpf1485bb6_3ff7_41c1_9e8a_a91d24986483.png</param.screenshot>
+    <param.screenshot>C:\Users\hvidi\AppData\Local\Temp\tp2cf6accb_ba5e_4124_8687_1e52874258a6.png</param.screenshot>
     <param.version>1.0</param.version>
-    <param.products.name />
-    <param.products.id />
-    <param.products.version />
+    <param.products.name>
+      <item>MATLAB</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+    </param.products.id>
+    <param.products.version>
+      <item>9.11</item>
+    </param.products.version>
     <param.platforms />
     <param.output>${PROJECT_ROOT}</param.output>
     <param.guid>45621bc9-b235-45f8-9eb2-9f5122e2a80d</param.guid>
@@ -22,9 +28,6 @@
       <param.icons />
       <param.description />
       <param.version />
-      <param.products.name />
-      <param.products.id />
-      <param.products.version />
       <param.platforms />
       <param.output />
     </unset>
