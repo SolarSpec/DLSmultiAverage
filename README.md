@@ -67,7 +67,7 @@
 ## About The Project
 
 [![PIAS Screenshot][product-screenshot]](https://solarspec.ok.ubc.ca/)
-A GUI to help average all the useful data exported from the LS instrument 
+A GUI to help average all the useful data exported from the LS instrument.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -112,7 +112,7 @@ Make sure MATLAB is installed. It is available for download in the Software Dist
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-This app is currently lacking in any examples to be shown as it is still being created
+To begin, select the extracted LS instrument (.dat) files that you want averaged. After specifying which files, the GUI will plot the correlated g2-1 data vs. lag time (s) while also displaying each respective channel (CHA and CHB). At the bottom of the application, the filename of the currently plotted data will display above a UI prompt; which asks the user whether to add the file for averaging or if it should be disregarded. After the app has completed iterating through each file, it will then display a successful alert message indicating the new filename of the averaged data, along with its file location.
 
 _For more information on any of the internal functions, please refer to the [MATLAB Documentation](https://www.mathworks.com/help/matlab/)_
 
